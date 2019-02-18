@@ -1,0 +1,405 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 101092.46,
+        "2011": 101498.99,
+        "2012": 94217.23,
+        "2013": 95447.63,
+        "2014": 110180.38,
+        "2015": 125422.62,
+        "2016": 146578.13,
+        "Cities": "Austin-Round Rock, TX Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.7431,
+          30.2672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 81173.61,
+        "2011": 91002.89,
+        "2012": 85394.96,
+        "2013": 82344.74,
+        "2014": 83145.45,
+        "2015": 86746.7,
+        "2016": 89322.66,
+        "Cities": "Bakersfield, CA Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.0187,
+          35.3733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 97658.51,
+        "2011": 84276.49,
+        "2012": 92358.57,
+        "2013": 101989.87,
+        "2014": 93419.46,
+        "2015": 99574.61,
+        "2016": 137901.05,
+        "Cities": "Colorado Springs, CO Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.8214,
+          38.8339
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 109045.45,
+        "2011": 89238.08,
+        "2012": 125751.94,
+        "2013": 101134.05,
+        "2014": 106458.38,
+        "2015": 64407.72,
+        "2016": 91720.68,
+        "Cities": "Dallas-Fort Worth-Arlington, TX Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -96.797,
+          32.7767
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 65653.85,
+        "2011": 82636.13,
+        "2012": 55827.59,
+        "2013": 55389.01,
+        "2014": 59961.78,
+        "2015": 65437.01,
+        "2016": 66490.73,
+        "Cities": "Jacksonville, FL Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.6557,
+          30.3322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 76363.71,
+        "2011": 75821.91,
+        "2012": 80079.41,
+        "2013": 74325.32,
+        "2014": 77687.5,
+        "2015": 94202.74,
+        "2016": 88167.2,
+        "Cities": "Madison, WI Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.4012,
+          43.0731
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 79816.95,
+        "2011": 83384.87,
+        "2012": 86095.87,
+        "2013": 86875.24,
+        "2014": 98384.22,
+        "2015": 95116.39,
+        "2016": 94441.22,
+        "Cities": "Memphis, TN-MS-AR Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.049,
+          35.1495
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 73878.26,
+        "2011": 82764.92,
+        "2012": 80847.27,
+        "2013": 77197.47,
+        "2014": 72764.83,
+        "2015": 74015,
+        "2016": 76773.13,
+        "Cities": "Milwaukee-Waukesha-West Allis, WI Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.9065,
+          43.0389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 91109.24,
+        "2011": 96336.14,
+        "2012": 131899.47,
+        "2013": 138864.44,
+        "2014": 136620.38,
+        "2015": 147515.02,
+        "2016": 116584.39,
+        "Cities": "Minneapolis-St. Paul-Bloomington, MN-WI Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.265,
+          44.9778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 89964.12,
+        "2011": 96265.22,
+        "2012": 108746.44,
+        "2013": 86958.95,
+        "2014": 106168.88,
+        "2015": 122263.26,
+        "2016": 113818.7,
+        "Cities": "Nashville-Davidson--Murfreesboro--Franklin, TN Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.7816,
+          36.1627
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 59075,
+        "2011": 66200,
+        "2012": 63993.75,
+        "2013": 66947.01,
+        "2014": 68055.07,
+        "2015": 77200.18,
+        "2016": 65991.83,
+        "Cities": "Oklahoma City, OK Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.5164,
+          35.4676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 69248.03,
+        "2011": 57525.32,
+        "2012": 74573.08,
+        "2013": 64979.88,
+        "2014": 73700.26,
+        "2015": 78957.14,
+        "2016": 62507.29,
+        "Cities": "Omaha-Council Bluffs, NE-IA Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.9345,
+          41.2565
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 107069.62,
+        "2011": 114696.12,
+        "2012": 116696.41,
+        "2013": 117918.9,
+        "2014": 125093.95,
+        "2015": 147945.71,
+        "2016": 130100.33,
+        "Cities": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1652,
+          39.9526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 147570.79,
+        "2011": 145772.2,
+        "2012": 156168.04,
+        "2013": 160015.18,
+        "2014": 156082.39,
+        "2015": 182514.45,
+        "2016": 182378.45,
+        "Cities": "San Jose-Sunnyvale-Santa Clara, CA Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.886,
+          37.3382
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 104478.87,
+        "2011": 99110.31,
+        "2012": 100168.6,
+        "2013": 111425.9,
+        "2014": 104670.67,
+        "2015": 110248.2,
+        "2016": 104223.84,
+        "Cities": "Seattle-Tacoma-Bellevue, WA Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.332,
+          47.6062
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 79700.58,
+        "2011": 68597.59,
+        "2012": 72479.99,
+        "2013": 68731.84,
+        "2014": 72917.17,
+        "2015": 76518.13,
+        "2016": 72844.58,
+        "Cities": "Tampa-St. Petersburg-Clearwater, FL Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.4572,
+          27.9506
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 78003.59,
+        "2011": 85543.46,
+        "2012": 82665.01,
+        "2013": 86698.41,
+        "2014": 88724.51,
+        "2015": 87434.69,
+        "2016": 92713.98,
+        "Cities": "Tucson, AZ Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.975,
+          32.2226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 65827.59,
+        "2011": 65916.7,
+        "2012": 72045.07,
+        "2013": 71158.36,
+        "2014": 71175.4,
+        "2015": 79413.8,
+        "2016": 75765.07,
+        "Cities": "Virginia Beach-Norfolk-Newport News, VA-NC Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.978,
+          36.8529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 91643.74,
+        "2011": 94402.49,
+        "2012": 102186.16,
+        "2013": 97717.81,
+        "2014": 104605.99,
+        "2015": 105121.63,
+        "2016": 105202.14,
+        "Cities": "Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0369,
+          38.9072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "2010": 42250.94,
+        "2011": 40219.9,
+        "2012": 43779.17,
+        "2013": 59113.64,
+        "2014": 57733.81,
+        "2015": 58767.74,
+        "2016": 63012.4,
+        "Cities": "Wichita, KS Metro Area"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.3301,
+          37.6872
+        ]
+      }
+    }
+  ]
+}

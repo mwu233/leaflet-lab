@@ -1,0 +1,335 @@
+<html>
+      <head>
+        <meta charset="UTF-8">
+        <title>README.md</title>
+      </head>
+      <body>
+        <h1 id="leaflet-markercluster">Leaflet.markercluster</h1>
+<p>Provides Beautiful Animated Marker Clustering functionality for <a href="http://leafletjs.com">Leaflet</a>, a JS library for interactive maps.</p>
+<p><em>Requires Leaflet 1.0.0</em></p>
+<p><img src="example/map.png" alt="cluster map example"></p>
+<p>For a Leaflet 0.7 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/tree/leaflet-0.7">use the leaflet-0.7 branch</a><br>
+For a Leaflet 0.5 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/b128e950d8f5d7da5b60bd0aa9a88f6d3dd17c98.zip">Download b128e950</a><br>
+For a Leaflet 0.4 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/0.2.zip">Download the 0.2 release</a></p>
+<!---
+TOC created with gh-md-toc
+https://github.com/ekalinin/github-markdown-toc
+removed link to h1 and indented back 2 spaces all links.
+-->
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#using-the-plugin">Using the plugin</a><ul>
+<li><a href="#building-testing-and-linting-scripts">Building, testing and linting scripts</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+</li>
+<li><a href="#options">Options</a><ul>
+<li><a href="#defaults">Defaults</a></li>
+<li><a href="#customising-the-clustered-markers">Customising the Clustered Markers</a></li>
+<li><a href="#customising-spiderfy-shape-positions">Customising Spiderfy shape positions</a></li>
+<li><a href="#all-options">All Options</a><ul>
+<li><a href="#enabled-by-default-boolean-options">Enabled by default (boolean options)</a></li>
+<li><a href="#other-options">Other options</a></li>
+<li><a href="#chunked-addlayers-options">Chunked addLayers options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#events">Events</a><ul>
+<li><a href="#additional-markerclustergroup-events">Additional MarkerClusterGroup Events</a></li>
+</ul>
+</li>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#group-methods">Group methods</a><ul>
+<li><a href="#adding-and-removing-markers">Adding and removing Markers</a></li>
+<li><a href="#bulk-adding-and-removing-markers">Bulk adding and removing Markers</a></li>
+<li><a href="#getting-the-visible-parent-of-a-marker">Getting the visible parent of a marker</a></li>
+<li><a href="#refreshing-the-clusters-icon">Refreshing the clusters icon</a></li>
+<li><a href="#other-group-methods">Other Group Methods</a></li>
+</ul>
+</li>
+<li><a href="#clusters-methods">Clusters methods</a><ul>
+<li><a href="#getting-the-bounds-of-a-cluster">Getting the bounds of a cluster</a></li>
+<li><a href="#zooming-to-the-bounds-of-a-cluster">Zooming to the bounds of a cluster</a></li>
+<li><a href="#other-clusters-methods">Other clusters methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#handling-lots-of-markers">Handling LOTS of markers</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#sub-plugins">Sub-plugins</a></li>
+</ul>
+<h2 id="using-the-plugin">Using the plugin</h2>
+<p>Include the plugin CSS and JS files on your page after Leaflet files, using your method of choice:</p>
+<ul>
+<li><a href="https://github.com/Leaflet/Leaflet.markercluster/archive/v1.4.1.zip">Download the <code>v1.4.1</code> release</a></li>
+<li>Use unpkg CDN: <code>https://unpkg.com/leaflet.markercluster@1.4.1/dist/</code></li>
+<li>Install with npm: <code>npm install leaflet.markercluster</code></li>
+</ul>
+<p>In each case, use files in the <code>dist</code> folder:</p>
+<ul>
+<li><code>MarkerCluster.css</code></li>
+<li><code>MarkerCluster.Default.css</code> (not needed if you use your own <code>iconCreateFunction</code> instead of the default one)</li>
+<li><code>leaflet.markercluster.js</code> (or <code>leaflet.markercluster-src.js</code> for the non-minified version)</li>
+</ul>
+<h3 id="building-testing-and-linting-scripts">Building, testing and linting scripts</h3>
+<p>Install jake <code>npm install -g jake</code> then run <code>npm install</code></p>
+<ul>
+<li>To check the code for errors and build Leaflet from source, run <code>jake</code>.</li>
+<li>To run the tests, run <code>jake test</code>.</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p>See the included examples for usage.</p>
+<p>The <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld.388.html">realworld example</a> is a good place to start, it uses all of the defaults of the clusterer.
+Or check out the <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for how to customise the behaviour and appearance of the clusterer</p>
+<h3 id="usage">Usage</h3>
+<p>Create a new MarkerClusterGroup, add your markers to it, then add it to the map</p>
+<pre><code class="lang-javascript">var markers = L.markerClusterGroup();
+markers.addLayer(L.marker(getRandomLatLng(map)));
+... Add more layers ...
+map.addLayer(markers);
+</code></pre>
+<h2 id="options">Options</h2>
+<h3 id="defaults">Defaults</h3>
+<p>By default the Clusterer enables some nice defaults for you:</p>
+<ul>
+<li><strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li><strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li><strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. (<em>Note: the spiderfy occurs at the current zoom level if all items within the cluster are still clustered at the maximum zoom level or at zoom specified by <code>disableClusteringAtZoom</code> option</em>)</li>
+<li><strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+<li><strong>spiderLegPolylineOptions</strong>: Allows you to specify <a href="http://leafletjs.com/reference.html#polyline-options">PolylineOptions</a> to style spider legs. By default, they are <code>{ weight: 1.5, color: &#39;#222&#39;, opacity: 0.5 }</code>.</li>
+</ul>
+<p>You can disable any of these as you want in the options when you create the MarkerClusterGroup:</p>
+<pre><code class="lang-javascript">var markers = L.markerClusterGroup({
+    spiderfyOnMaxZoom: false,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: false
+});
+</code></pre>
+<h3 id="customising-the-clustered-markers">Customising the Clustered Markers</h3>
+<p>As an option to MarkerClusterGroup you can provide your own function for creating the Icon for the clustered markers.
+The default implementation changes color at bounds of 10 and 100, but more advanced uses may require customising this.
+You do not need to include the .Default css if you go this way.
+You are passed a MarkerCluster object, you&#39;ll probably want to use <code>getChildCount()</code> or <code>getAllChildMarkers()</code> to work out the icon to show.</p>
+<pre><code class="lang-javascript">var markers = L.markerClusterGroup({
+    iconCreateFunction: function(cluster) {
+        return L.divIcon({ html: &#39;&lt;b&gt;&#39; + cluster.getChildCount() + &#39;&lt;/b&gt;&#39; });
+    }
+});
+</code></pre>
+<p>Check out the <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for an example of this.</p>
+<p>If you need to update the clusters icon (e.g. they are based on markers real-time data), use the method <a href="#refreshing-the-clusters-icon">refreshClusters()</a>.</p>
+<h3 id="customising-spiderfy-shape-positions">Customising Spiderfy shape positions</h3>
+<p>You can also provide a custom function as an option to MarkerClusterGroup to override the spiderfy shape positions. The example below implements linear spiderfy positions which overrides the default circular shape.</p>
+<pre><code class="lang-javascript">var markers = L.markerClusterGroup({
+    spiderfyShapePositions: function(count, centerPt) {
+                var distanceFromCenter = 35,
+                    markerDistance = 45,
+                    lineLength = markerDistance * (count - 1),
+                    lineStart = centerPt.y - lineLength / 2,
+                    res = [],
+                    i;
+
+                res.length = count;
+
+                for (i = count - 1; i &gt;= 0; i--) {
+                    res[i] = new Point(centerPt.x + distanceFromCenter, lineStart + markerDistance * i);
+                }
+
+                return res;
+            }
+});
+</code></pre>
+<h3 id="all-options">All Options</h3>
+<h4 id="enabled-by-default-boolean-options-">Enabled by default (boolean options)</h4>
+<ul>
+<li><strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li><strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li><strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. (<em>Note: the spiderfy occurs at the current zoom level if all items within the cluster are still clustered at the maximum zoom level or at zoom specified by <code>disableClusteringAtZoom</code> option</em>).</li>
+<li><strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+<li><strong>animate</strong>: Smoothly split / merge cluster children when zooming and spiderfying. If <code>L.DomUtil.TRANSITION</code> is false, this option has no effect (no animation is possible).</li>
+</ul>
+<h4 id="other-options">Other options</h4>
+<ul>
+<li><strong>animateAddingMarkers</strong>: If set to true (and <code>animate</code> option is also true) then adding individual markers to the MarkerClusterGroup after it has been added to the map will add the marker and animate it into the cluster. Defaults to false as this gives better performance when bulk adding markers. addLayers does not support this, only addLayer with individual Markers.</li>
+<li><strong>disableClusteringAtZoom</strong>: If set, at this zoom level and below, markers will not be clustered. This defaults to disabled. <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld-maxzoom.388.html">See Example</a>. Note: you may be interested in disabling <code>spiderfyOnMaxZoom</code> option when using <code>disableClusteringAtZoom</code>.</li>
+<li><strong>maxClusterRadius</strong>: The maximum radius that a cluster will cover from the central marker (in pixels). Default 80. Decreasing will make more, smaller clusters. You can also use a function that accepts the current map zoom and returns the maximum cluster radius in pixels.</li>
+<li><strong>polygonOptions</strong>: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster. Defaults to empty, which lets Leaflet use the <a href="http://leafletjs.com/reference.html#path-options">default Path options</a>.</li>
+<li><strong>singleMarkerMode</strong>: If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster. Note: the markers are not replaced by cluster objects, only their icon is replaced. Hence they still react to normal events, and option <code>disableClusteringAtZoom</code> does not restore their previous icon (see <a href="https://github.com/Leaflet/Leaflet.markercluster/issues/391">#391</a>).</li>
+<li><strong>spiderLegPolylineOptions</strong>: Allows you to specify <a href="http://leafletjs.com/reference.html#polyline-options">PolylineOptions</a> to style spider legs. By default, they are <code>{ weight: 1.5, color: &#39;#222&#39;, opacity: 0.5 }</code>.</li>
+<li><strong>spiderfyDistanceMultiplier</strong>: Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default: 1).</li>
+<li><strong>iconCreateFunction</strong>: Function used to create the cluster icon. See <a href="https://github.com/Leaflet/Leaflet.markercluster/blob/15ed12654acdc54a4521789c498e4603fe4bf781/src/MarkerClusterGroup.js#L542">the default implementation</a> or the <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a>.</li>
+<li><strong>spiderfyShapePositions</strong>: Function used to override spiderfy default shape positions. </li>
+<li><strong>clusterPane</strong>: Map pane where the cluster icons will be added. Defaults to L.Marker&#39;s default (currently &#39;markerPane&#39;). <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-pane.html">See the pane example</a>.</li>
+</ul>
+<h4 id="chunked-addlayers-options">Chunked addLayers options</h4>
+<p>Options for the <a href="#bulk-adding-and-removing-markers">addLayers</a> method. See <a href="https://github.com/Leaflet/Leaflet.markercluster/issues/357">#357</a> for explanation on how the chunking works.</p>
+<ul>
+<li><strong>chunkedLoading</strong>: Boolean to split the addLayer<strong>s</strong> processing in to small intervals so that the page does not freeze.</li>
+<li><strong>chunkInterval</strong>: Time interval (in ms) during which addLayers works before pausing to let the rest of the page process. In particular, this prevents the page from freezing while adding a lot of markers. Defaults to 200ms.</li>
+<li><strong>chunkDelay</strong>: Time delay (in ms) between consecutive periods of processing for addLayers. Default to 50ms.</li>
+<li><strong>chunkProgress</strong>: Callback function that is called at the end of each chunkInterval. Typically used to implement a progress indicator, e.g. <a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/marker-clustering-realworld.50000.html#L33-L49">code in RealWorld 50k</a>. Defaults to null. Arguments:<ol>
+<li>Number of processed markers</li>
+<li>Total number of markers being added</li>
+<li>Elapsed time (in ms)</li>
+</ol>
+</li>
+</ul>
+<h2 id="events">Events</h2>
+<p>Leaflet events like <code>click</code>, <code>mouseover</code>, etc. are just related to <em>Markers</em> in the cluster.
+To receive events for clusters, listen to <code>&#39;cluster&#39; + &#39;&lt;eventName&gt;&#39;</code>, ex: <code>clusterclick</code>, <code>clustermouseover</code>, <code>clustermouseout</code>.</p>
+<p>Set your callback up as follows to handle both cases:</p>
+<pre><code class="lang-javascript">markers.on(&#39;click&#39;, function (a) {
+    console.log(&#39;marker &#39; + a.layer);
+});
+
+markers.on(&#39;clusterclick&#39;, function (a) {
+    // a.layer is actually a cluster
+    console.log(&#39;cluster &#39; + a.layer.getAllChildMarkers().length);
+});
+</code></pre>
+<h3 id="additional-markerclustergroup-events">Additional MarkerClusterGroup Events</h3>
+<ul>
+<li><strong>animationend</strong>: Fires when marker clustering/unclustering animation has completed</li>
+<li><strong>spiderfied</strong>: Fires when overlapping markers get spiderified (Contains <code>cluster</code> and <code>markers</code> attributes)</li>
+<li><strong>unspiderfied</strong>: Fires when overlapping markers get unspiderified (Contains <code>cluster</code> and <code>markers</code> attributes)</li>
+</ul>
+<h2 id="methods">Methods</h2>
+<h3 id="group-methods">Group methods</h3>
+<h4 id="adding-and-removing-markers">Adding and removing Markers</h4>
+<p><code>addLayer</code>, <code>removeLayer</code> and <code>clearLayers</code> are supported and they should work for most uses.</p>
+<h4 id="bulk-adding-and-removing-markers">Bulk adding and removing Markers</h4>
+<p><code>addLayers</code> and <code>removeLayers</code> are bulk methods for adding and removing markers and should be favoured over the single versions when doing bulk addition/removal of markers. Each takes an array of markers. You can use <a href="#chunked-addlayers-options">dedicated options</a> to fine-tune the behaviour of <code>addLayers</code>.</p>
+<p>These methods extract non-group layer children from Layer Group types, even deeply nested. <em>However</em>, be noted that:</p>
+<ul>
+<li><code>chunkProgress</code> jumps backward when <code>addLayers</code> finds a group (since appending its children to the input array makes the total increase).</li>
+<li>Groups are not actually added into the MarkerClusterGroup, only their non-group child layers. Therfore, <code>hasLayer</code> method will return <code>true</code> for non-group child layers, but <code>false</code> on any (possibly parent) Layer Group types.</li>
+</ul>
+<p>If you are removing a lot of markers it will almost definitely be better to call <code>clearLayers</code> then call <code>addLayers</code> to add the markers you don&#39;t want to remove back in. See <a href="https://github.com/Leaflet/Leaflet.markercluster/issues/59#issuecomment-9320628">#59</a> for details.</p>
+<h4 id="getting-the-visible-parent-of-a-marker">Getting the visible parent of a marker</h4>
+<p>If you have a marker in your MarkerClusterGroup and you want to get the visible parent of it (Either itself or a cluster it is contained in that is currently visible on the map).
+This will return null if the marker and its parent clusters are not visible currently (they are not near the visible viewpoint)</p>
+<pre><code class="lang-javascript">var visibleOne = markerClusterGroup.getVisibleParent(myMarker);
+console.log(visibleOne.getLatLng());
+</code></pre>
+<h4 id="refreshing-the-clusters-icon">Refreshing the clusters icon</h4>
+<p>If you have <a href="#customising-the-clustered-markers">customized</a> the clusters icon to use some data from the contained markers, and later that data changes, use this method to force a refresh of the cluster icons.
+You can use the method:</p>
+<ul>
+<li>without arguments to force all cluster icons in the Marker Cluster Group to be re-drawn.</li>
+<li>with an array or a mapping of markers to force only their parent clusters to be re-drawn.</li>
+<li>with an L.LayerGroup. The method will look for all markers in it. Make sure it contains only markers which are also within this Marker Cluster Group.</li>
+<li>with a single marker.<pre><code class="lang-javascript">markers.refreshClusters();
+markers.refreshClusters([myMarker0, myMarker33]);
+markers.refreshClusters({id_0: myMarker0, id_any: myMarker33});
+markers.refreshClusters(myLayerGroup);
+markers.refreshClusters(myMarker);
+</code></pre>
+</li>
+</ul>
+<p>The plugin also adds a method on L.Marker to easily update the underlying icon options and refresh the icon.
+If passing a second argument that evaluates to <code>true</code>, the method will also trigger a <code>refreshCluster</code> on the parent MarkerClusterGroup for that single marker.</p>
+<pre><code class="lang-javascript">// Use as many times as required to update markers,
+// then call refreshClusters once finished.
+for (i in markersSubArray) {
+    markersSubArray[i].refreshIconOptions(newOptionsMappingArray[i]);
+}
+markers.refreshClusters(markersSubArray);
+
+// If updating only one marker, pass true to
+// refresh this marker&#39;s parent clusters right away.
+myMarker.refreshIconOptions(optionsMap, true); 
+</code></pre>
+<h4 id="other-group-methods">Other Group Methods</h4>
+<ul>
+<li><strong>hasLayer</strong>(layer): Returns true if the given layer (marker) is in the MarkerClusterGroup.</li>
+<li><strong>zoomToShowLayer</strong>(layer, callback): Zooms to show the given marker (spiderfying if required), calls the callback when the marker is visible on the map.</li>
+</ul>
+<h3 id="clusters-methods">Clusters methods</h3>
+<p>The following methods can be used with clusters (not the group). They are typically used for event handling.</p>
+<h4 id="getting-the-bounds-of-a-cluster">Getting the bounds of a cluster</h4>
+<p>When you receive an event from a cluster you can query it for the bounds.</p>
+<pre><code class="lang-javascript">markers.on(&#39;clusterclick&#39;, function (a) {
+    var latLngBounds = a.layer.getBounds();
+});
+</code></pre>
+<p>You can also query for the bounding convex polygon.
+See <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-convexhull.html">example/marker-clustering-convexhull.html</a> for a working example.</p>
+<pre><code class="lang-javascript">markers.on(&#39;clusterclick&#39;, function (a) {
+    map.addLayer(L.polygon(a.layer.getConvexHull()));
+});
+</code></pre>
+<h4 id="zooming-to-the-bounds-of-a-cluster">Zooming to the bounds of a cluster</h4>
+<p>When you receive an event from a cluster you can zoom to its bounds in one easy step.
+If all of the markers will appear at a higher zoom level, that zoom level is zoomed to instead.
+<code>zoomToBounds</code> takes an optional argument to pass <a href="http://leafletjs.com/reference.html#map-fitboundsoptions">options to the resulting <code>fitBounds</code> call</a>.</p>
+<p>See <a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-zoomtobounds.html">marker-clustering-zoomtobounds.html</a> for a working example.</p>
+<pre><code class="lang-javascript">markers.on(&#39;clusterclick&#39;, function (a) {
+    a.layer.zoomToBounds({padding: [20, 20]});
+});
+</code></pre>
+<h4 id="other-clusters-methods">Other clusters methods</h4>
+<ul>
+<li><strong>getChildCount</strong>: Returns the total number of markers contained within that cluster.</li>
+<li><strong>getAllChildMarkers(storage: array | undefined, ignoreDraggedMarker: boolean | undefined)</strong>: Returns an array of all markers contained within this cluster (storage will be used if provided). If ignoreDraggedMarker is true and there is currently a marker dragged, the dragged marker will not be included in the array.</li>
+<li><strong>spiderfy</strong>: Spiderfies the child markers of this cluster</li>
+<li><strong>unspiderfy</strong>: Unspiderfies a cluster (opposite of spiderfy)</li>
+</ul>
+<h2 id="handling-lots-of-markers">Handling LOTS of markers</h2>
+<p>The Clusterer can handle 10,000 or even 50,000 markers (in chrome). IE9 has some issues with 50,000.</p>
+<ul>
+<li><a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld.10000.html">realworld 10,000 example</a></li>
+<li><a href="https://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld.50000.html">realworld 50,000 example</a></li>
+</ul>
+<p>Note: these two examples use the <code>chunkedLoading</code> option set to true in order to avoid locking the browser for a long time.</p>
+<h2 id="license">License</h2>
+<p>Leaflet.markercluster is free software, and may be redistributed under the MIT-LICENSE.</p>
+<p><a href="https://travis-ci.org/Leaflet/Leaflet.markercluster"><img src="https://travis-ci.org/Leaflet/Leaflet.markercluster.png?branch=master" alt="Build Status"></a></p>
+<h2 id="sub-plugins">Sub-plugins</h2>
+<p>Leaflet.markercluster plugin is very popular and as such it generates high and
+diverse expectations for increased functionalities.</p>
+<p>If you are in that case, be sure to have a look first at the repository
+<a href="https://github.com/Leaflet/Leaflet.markercluster/issues">issues</a> in case what
+you are looking for would already be discussed, and some workarounds would be proposed.</p>
+<p>Check also the below sub-plugins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Plugin</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Maintainer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://github.com/ghybs/Leaflet.FeatureGroup.SubGroup">Leaflet.FeatureGroup.SubGroup</a></td>
+<td style="text-align:left">Creates a Feature Group that adds its child layers into a parent group when added to a map (e.g. through L.Control.Layers). Typical usage is to dynamically add/remove groups of markers from Marker Cluster.</td>
+<td style="text-align:left"><a href="https://github.com/ghybs">ghybs</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://github.com/ghybs/Leaflet.MarkerCluster.LayerSupport">Leaflet.MarkerCluster.LayerSupport</a></td>
+<td style="text-align:left">Brings compatibility with L.Control.Layers and other Leaflet plugins. I.e. everything that uses direct calls to map.addLayer and map.removeLayer.</td>
+<td style="text-align:left"><a href="https://github.com/ghybs">ghybs</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://github.com/ghybs/Leaflet.MarkerCluster.Freezable">Leaflet.MarkerCluster.Freezable</a></td>
+<td style="text-align:left">Adds the ability to freeze clusters at a specified zoom. E.g. freezing at maxZoom + 1 makes as if clustering was programmatically disabled.</td>
+<td style="text-align:left"><a href="https://github.com/ghybs">ghybs</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://github.com/adammertel/Leaflet.MarkerCluster.PlacementStrategies">Leaflet.MarkerCluster.PlacementStrategies</a></td>
+<td style="text-align:left">Implements new strategies to position clustered markers (eg: clock, concentric circles, ...). Recommended to use with circleMarkers. <a href="https://adammertel.github.io/Leaflet.MarkerCluster.PlacementStrategies/demo/demo1.html">Demo</a></td>
+<td style="text-align:left"><a href="https://github.com/adammertel">adammertel</a> / <a href="http://carto.univie.ac.at/">UNIVIE</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://github.com/adammertel/Leaflet.MarkerCluster.List">Leaflet.MarkerCluster.List</a></td>
+<td style="text-align:left">Displays child elements in a list. Suitable for mobile devices. <a href="https://adammertel.github.io/Leaflet.MarkerCluster.List/demo/demo1.html">Demo</a></td>
+<td style="text-align:left"><a href="https://github.com/adammertel">adammertel</a> / <a href="http://carto.univie.ac.at/">UNIVIE</a></td>
+</tr>
+</tbody>
+</table>
+
+      </body>
+    </html>
