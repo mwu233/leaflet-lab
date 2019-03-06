@@ -8,6 +8,11 @@
 
 /* Map of GeoJSON data from MegaCities.geojson */
 
+var curLayer;
+var curMap;
+var attributes;
+var index = 0;
+var response_data;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -15,16 +20,18 @@ function createMap(){
         center: [40,-95.7129],
         zoom: 4
     });
-
+    
+    curMap = map;
+    
     //add OSM base tilelayer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 19
-    }).addTo(map);
+    }).addTo(curMap);
 
     //call getData function
-    getData(map);
+    getData(curMap);
 
 };
 
@@ -35,17 +42,25 @@ function getData(map){
         dataType: "json",
         success: function(response){
             //create an attributes array
-            var attributes = processData(response);
+            response_data = response;
+            attributes = processData(response);
+            
+            //create input control
+            //createTextControls(response,map,attributes);
+            
             //create proportional symbols
-            createPropSymbols(response, map, attributes);
+            curLayer = createPropSymbols(response, map, attributes, 0);
+            map.addLayer(curLayer);
+            
             //create sequential control over the 7 years
-            createSequenceControls(map, attributes);
+            createSequenceControls(response, map, attributes); //add response here
             
-            createLegend(map, attributes);
+            //create legend
+            createLegend(map);
             
+            //update legend
             updateLegend(map, attributes[0]);
-            // filter function
-            // filterProcess(response, map, attributes);
+            
         }
     });
     
@@ -75,7 +90,7 @@ function getData(map){
 //Above Example 3.8...Step 3: build an attributes array from the data
 function processData(data){
     //empty array to hold attributes
-    var attributes = [];
+    var attrs = [];
 
     //properties of the first feature in the dataset
     var properties = data.features[0].properties;
@@ -84,45 +99,82 @@ function processData(data){
     for (var attribute in properties){
         //only take attributes with population values
         if (attribute.indexOf("20") > -1){
-            attributes.push(attribute);
+            attrs.push(attribute);
         };
     };
 
-    //check result
-    console.log(attributes);
-
-    return attributes;
+    return attrs;
 };
+
+
+//Create Text controls
+/*function createTextControls(map,attributes){
+    var InputTextControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+
+        onAdd: function (map) {
+            // create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'inputtext-control-container');
+
+            //create range input element (text)
+            $(container).append('<input id="range-min" type="text" value = '+inputMin+'>');
+            $(container).append('<input id="range-max" type="text" value = '+inputMax+'>');
+            $(container).append('<button class="filter">Filter</button>');
+            //disable any mouse event listeners for the container
+            L.DomEvent.disableClickPropagation(container);
+
+            return container;
+        }
+    });
+
+    //map.addControl(new InputTextControl());
+    map.addControl(new InputTextControl());
+    
+    $('.filter').click(function(){
+        //get the old index value
+        inputMin = Number($('#range-min').val());
+        inputMax = Number($('#range-max').val());
+        //console.log(inputMin);
+        console.log($("#range-min").val());
+    });
+}*/
+
+$('.filter').on('click', function() {
+    inputMin = Number($('#range-min').val());
+    inputMax = Number($('#range-max').val());
+    
+    curLayer = createPropSymbols(response_data, curMap, attributes, index);
+    curMap.addLayer(curLayer);
+
+    //update legend
+    updateLegend(curMap, attributes[index]);
+});
 
 //Example 2.1 line 34...Add circle markers for point features to the map
-function createPropSymbols(data, map, attributes){
+function createPropSymbols(data, map, attrs, idx){
+    if (curLayer){
+        map.removeLayer(curLayer);
+    };
+
     //create a Leaflet GeoJSON layer and add it to the map
-    L.geoJson(data, {
+    var geoJsonLayer = L.geoJson(data, {
+        filter: function(feature, layer) {
+            return filterMinMax(feature, layer, idx);
+        },
         pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
+            return pointToLayer(feature, latlng, attrs, idx);
         }
-    }).addTo(map);
-};
-
-// a consolidated popup-creation function
-function createPopup(properties, attribute, layer, radius){
-    
-    //popup content is now just the city name
-    var popupContent = properties.Cities;
-    //add formatted attribute to panel content string
-    popupContent += "<p><b>Population of scientific research and development services in " + attribute + ":</b> " + properties[attribute] + "</p>";
-    //bind the popup to the circle marker
-    layer.bindPopup(popupContent, {
-        offset: new L.Point(0,-radius),
-        closeButton: false 
     });
+    return geoJsonLayer;
 };
 
-function pointToLayer(feature, latlng, attributes){
+function pointToLayer(feature, latlng, attrs, idx){
     //Step 4: Assign the current attribute based on the first index of the attributes array
-    var attribute = attributes[0];
+    var attribute = attrs[idx];
     //check
-    console.log(attribute);
+    //console.log(attribute);
     
     //create marker options
     var options = {
@@ -159,8 +211,17 @@ function pointToLayer(feature, latlng, attributes){
     return layer;
 };
 
+var inputMin = 0;
+var inputMax = 1000000;
+// for filtering with min and max
+function filterMinMax(feature, layer, idx){
+    var year = '201'+idx;
+    //console.log(year);
+    return (feature.properties[year] >= inputMin && feature.properties[year] <= inputMax);
+}
+
 //Step 1: Create new sequence controls
-function createSequenceControls(map, attributes){
+function createSequenceControls(response, map, attrs){
     var SequenceControl = L.Control.extend({
         options: {
             position: 'bottomleft'
@@ -183,7 +244,7 @@ function createSequenceControls(map, attributes){
             return container;
         }
     });
-
+    
     map.addControl(new SequenceControl());
     
 	//set slider attributes
@@ -202,8 +263,8 @@ function createSequenceControls(map, attributes){
     //Step 5: click listener for buttons
     $('.skip').click(function(){
         //get the old index value
-        var index = $('.range-slider').val();
-
+        index = $('.range-slider').val();
+        
         //Step 6: increment or decrement depending on button clicked
         if ($(this).attr('id') == 'forward'){
             index++;
@@ -219,25 +280,32 @@ function createSequenceControls(map, attributes){
         $('.range-slider').val(index);
 		//Called in both skip button and slider event listener handlers
 		//Step 9: pass new attribute to update symbols
-		updatePropSymbols(map, attributes[index]);
-        updateLegend(map, attributes[index]);
+        
+        curLayer = createPropSymbols(response, map, attrs, index);
+        map.addLayer(curLayer);
+        
+		updatePropSymbols(map, attrs[index]);
+        updateLegend(map, attrs[index]);
     });
 
     //Step 5: input listener for slider
     $('.range-slider').on('input', function(){
         //Step 6: get the new index value
-        var index = $(this).val();
-		
+        index = $(this).val();
+        
 		//Called in both skip button and slider event listener handlers
 		//Step 9: pass new attribute to update symbols
-		updatePropSymbols(map, attributes[index]);
-		updateLegend(map, attributes[index]);
+        curLayer = createPropSymbols(response, map, attrs, index);
+        map.addLayer(curLayer);
+        
+		updatePropSymbols(map, attrs[index]);
+		updateLegend(map, attrs[index]);
     });
 
 };
 
 // create legend
-function createLegend(map, attributes){
+function createLegend(map){
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
@@ -389,20 +457,6 @@ function updatePropSymbols(map, attribute){
     });
 };
 
-
-//added at Example 2.3 line 20...function to attach popups to each mapped feature
-function onEachFeature(feature, layer) {
-    //no property named popupContent; instead, create html string with all properties
-    var popupContent = "";
-    if (feature.properties) {
-        //loop to add feature property names and values to html string
-        for (var property in feature.properties){
-            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-        }
-        layer.bindPopup(popupContent);
-    };
-};
-
 // proportional symbols
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
@@ -414,6 +468,20 @@ function calcPropRadius(attValue) {
     var radius = Math.sqrt(area/Math.PI);
 
     return radius;
+};
+
+// a consolidated popup-creation function
+function createPopup(properties, attribute, layer, radius){
+    
+    //popup content is now just the city name
+    var popupContent = properties.Cities;
+    //add formatted attribute to panel content string
+    popupContent += "<p><b>Population of scientific research and development services in " + attribute + ":</b> " + numberWithCommas(properties[attribute]) + "</p>";
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0,-radius),
+        closeButton: false 
+    });
 };
 
 $(document).ready(createMap);
