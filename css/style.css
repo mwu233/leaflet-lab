@@ -40,14 +40,68 @@
     /*border: solid gray 1px;*/
 }
 
+.inputtext-control-container{
+<<<<<<< HEAD
+    width: 320px;
+    height: 38px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 10px;
+=======
+    width: 500px;
+    height: 38px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 5px;
+>>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
+    line-height: 40px;
+    text-align: center;
+}
+
+<<<<<<< HEAD
+.filter {
+    background-color: Transparent;
+    border: none;
+    outline:none;
+    float: right;
+    padding: 4px;
+}
+
+#range-min{
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+#range-max{
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+=======
+#range-min{
+    padding: 5px;
+    margin-right: 30px;
+}
+
+#range-max{
+    padding: 5px;
+    margin-left: 30px;
+    margin-right: 30px;
+>>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
+}
+
 .range-slider {
     width: 200px;
 }
 
 #forward {
+    background-color: Transparent;
     float: right;
+    border: none;
+    outline:none;
 }
 
 #reverse {
+    background-color: Transparent;
     float: left;
+    border: none;
+    outline:none;
 }
