@@ -8,7 +8,6 @@
 		<!--put your external stylesheet links here-->
         <link rel="stylesheet" href="lib/leaflet/leaflet.css">
         <link rel="stylesheet" href="css/style.css">
-        
 		<!--[if IE<9]>
 			<link rel="stylesheet" href="css/style.ie.css">
 		<![endif]-->
@@ -16,13 +15,20 @@
 
 	<body>
 		<!--put your initial page content here-->
+        <!--<div id="range"></div>-->
         <div id="mapid"></div>
+        <div id="filter">
+            <input id="range-min" type="text" value = "0">
+            <input id="range-max" type="text" value = "1000000">
+            <button class="filter">Filter</button>
+        </div>
 		<!--<div id="panel"></div>-->
 		<!--you can also use this space for internal scripts or stylesheets;
 		place these within <script> or <style> tags-->
         
 		<!--put your external script links here; put main.js at the end-->
         <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src="lib/nouislider.js"></script>
         <script type="text/javascript" src="lib/leaflet/leaflet-src.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
 	</body>
