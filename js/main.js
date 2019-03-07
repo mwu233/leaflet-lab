@@ -10,13 +10,7 @@
 
 var curLayer;
 var curMap;
-<<<<<<< HEAD
 
-=======
-var attributes;
-var index = 0;
-var response_data;
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -46,18 +40,10 @@ function getData(map){
         dataType: "json",
         success: function(response){
             //create an attributes array
-<<<<<<< HEAD
             var attributes = processData(response);
             
             //create input control
             createTextControls(response,map,attributes);
-=======
-            response_data = response;
-            attributes = processData(response);
-            
-            //create input control
-            //createTextControls(response,map,attributes);
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
             
             //create proportional symbols
             curLayer = createPropSymbols(response, map, attributes, 0);
@@ -119,17 +105,10 @@ function processData(data){
 
 
 //Create Text controls
-<<<<<<< HEAD
 function createTextControls(response, map, attrs){
     var InputTextControl = L.Control.extend({
         options: {
             position: 'bottomleft'
-=======
-/*function createTextControls(map,attributes){
-    var InputTextControl = L.Control.extend({
-        options: {
-            position: 'topright'
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
         },
 
         onAdd: function (map) {
@@ -137,14 +116,10 @@ function createTextControls(response, map, attrs){
             var container = L.DomUtil.create('div', 'inputtext-control-container');
 
             //create range input element (text)
-<<<<<<< HEAD
               
             $(container).append('<label for="range-min" style = "padding-right: 3px">Min:</label>');
             $(container).append('<input id="range-min" type="text" value = '+inputMin+'>');
             $(container).append('<label for="range-max" style = "padding-right: 3px">Max:</label>');
-=======
-            $(container).append('<input id="range-min" type="text" value = '+inputMin+'>');
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
             $(container).append('<input id="range-max" type="text" value = '+inputMax+'>');
             $(container).append('<button class="filter">Filter</button>');
             //disable any mouse event listeners for the container
@@ -153,25 +128,17 @@ function createTextControls(response, map, attrs){
             return container;
         }
     });
-<<<<<<< HEAD
     
     //map.addControl(new InputTextControl());
     map.addControl(new InputTextControl());
     
     $('.filter').html('<img src="img/filter.png" style = "width:85px">');
     
-=======
-
-    //map.addControl(new InputTextControl());
-    map.addControl(new InputTextControl());
-    
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
     $('.filter').click(function(){
         //get the old index value
         inputMin = Number($('#range-min').val());
         inputMax = Number($('#range-max').val());
         //console.log(inputMin);
-<<<<<<< HEAD
         //console.log($("#range-min").val());
         //Step 8: update slider
         var index = $('.range-slider').val();
@@ -185,22 +152,6 @@ function createTextControls(response, map, attrs){
         updateLegend(map, attrs[index]);
     });
 }
-=======
-        console.log($("#range-min").val());
-    });
-}*/
-
-$('.filter').on('click', function() {
-    inputMin = Number($('#range-min').val());
-    inputMax = Number($('#range-max').val());
-    
-    curLayer = createPropSymbols(response_data, curMap, attributes, index);
-    curMap.addLayer(curLayer);
-
-    //update legend
-    updateLegend(curMap, attributes[index]);
-});
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
 
 //Example 2.1 line 34...Add circle markers for point features to the map
 function createPropSymbols(data, map, attrs, idx){
@@ -313,11 +264,7 @@ function createSequenceControls(response, map, attrs){
     //Step 5: click listener for buttons
     $('.skip').click(function(){
         //get the old index value
-<<<<<<< HEAD
         var index = $('.range-slider').val();
-=======
-        index = $('.range-slider').val();
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
         
         //Step 6: increment or decrement depending on button clicked
         if ($(this).attr('id') == 'forward'){
@@ -345,11 +292,7 @@ function createSequenceControls(response, map, attrs){
     //Step 5: input listener for slider
     $('.range-slider').on('input', function(){
         //Step 6: get the new index value
-<<<<<<< HEAD
         var index = $(this).val();
-=======
-        index = $(this).val();
->>>>>>> 3c2bd94a140519b16705b0392af369989d3391d5
         
 		//Called in both skip button and slider event listener handlers
 		//Step 9: pass new attribute to update symbols
