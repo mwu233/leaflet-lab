@@ -10,12 +10,13 @@
 
 var curLayer;
 var curMap;
-
+var curResponsecurResponsecurResponsecurResponsecurResponse;
+var curAttrs;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
     var map = L.map('mapid', {
-        center: [40,-95.7129],
+        center: [35,-95.7129],
         zoom: 4
     });
     
@@ -41,9 +42,12 @@ function getData(map){
         success: function(response){
             //create an attributes array
             var attributes = processData(response);
-            
+            curAttrs = attributes;
+            curResponse = response;
             //create input control
-            createTextControls(response,map,attributes);
+            //createTextControls(response,map,attributes);
+            
+            createChart(response,attributes);
             
             //create proportional symbols
             curLayer = createPropSymbols(response, map, attributes, 0);
@@ -60,28 +64,7 @@ function getData(map){
             
         }
     });
-    
-    // pop up info about the dataset
-    /*L.popup({
-        maxWidth: 640,
-        keepInView: true,
-        autoClose: false
-    })
-        .setLatLng([50,-95.7129])
-        .setContent("<strong style='font-size:15px'>Population of scientific research and development services in U.S. Metropolitans, 2016</strong><br />"+
-                     "<p style='font-size:11px;font-style:italic;'>This industry group comprises establishments engaged in conducting original investigation undertaken on a systematic basis to gain new knowledge (research) and/or the application of research findings or other scientific knowledge for the creation of new or significantly improved products or processes (experimental development). The industries within this industry group are defined on the basis of the domain of research; that is, on the scientific expertise of the establishment.</p>"+
-                   "<p style='font-size:11px'><b>Data Source: </b>American FactFinder, 2012 NAICS code</p>")
-        .openOn(map);*/
-    
-    //
-    /*var content = "<strong style='font-size:15px'>Population of scientific research and development services in U.S. Metropolitans, 2016</strong><br />"+"<p style='font-size:11px'><b>Data Source: </b>American FactFinder, 2012 NAICS code</p>"
-    var marker = L.marker([52,-125],{opacity: 0.01}).addTo(map);
-    marker.bindTooltip(content,{
-        permanent: true,
-        direction: 'right',
-        
-    }).openTooltip();
-*/
+
 };
 
 //Above Example 3.8...Step 3: build an attributes array from the data
@@ -103,9 +86,82 @@ function processData(data){
     return attrs;
 };
 
+function createChart(response,attrs){
+
+    var featureValues = [
+        [attrs[0],7021],
+        [attrs[1],7828],
+        [attrs[2],7117],
+        [attrs[3],7031],
+        [attrs[4],7694],
+        [attrs[5],7721],
+        [attrs[6],7518]
+    ] 
+    var arr = featureValues.map(function(value,index) { return value[1]; });
+    var min = Math.min.apply( null, arr );
+    var max = Math.max.apply( null, arr );
+    
+    var chartData ={
+        type: 'line',
+        "utc": true,
+        "title": {
+            "text": "Average Population from 20 Metros",
+            "font-size": "13px",
+            "adjust-layout":true,
+            wrapText: true,
+            margin: 5,
+        },
+        plotarea: {
+            margin: "dynamic 15 30 dynamic",
+        },
+        series: [
+        {
+          values: featureValues
+        }],
+        "scale-y": {
+            //"values": "0:1000:250",
+            "values": (Math.floor(min*0.95/100)*100).toString()+":"+(Math.ceil(max*1.05/100)*100).toString()+":200",
+            "line-color": "#f6f7f8",
+            "shadow": 0,
+            "guide": {
+                "line-style": "dashed"
+            },
+            "label": {
+                "text": "Population",
+            },
+            "minor-ticks": 0,
+            "thousands-separator": ","
+        },
+        "plot": {
+            "highlight":true,
+            "tooltip-text": "Pop: %v<br>%k",
+            "shadow": 0,
+            "line-width": "2px",
+            "marker": {
+                "type": "circle",
+                "size": 3
+            },
+            "highlight-state": {
+                "line-width":3
+            },
+            "animation":{
+              "effect":1,
+              "sequence":2,
+              "speed":50,
+            }
+        },
+
+    };
+    zingchart.render({
+        id: 'chart-div',
+        data: chartData,
+        height: '100%',
+        width: '100%'
+    });
+}
 
 //Create Text controls
-function createTextControls(response, map, attrs){
+/*function createTextControls(response, map, attrs){
     var InputTextControl = L.Control.extend({
         options: {
             position: 'bottomleft'
@@ -151,7 +207,7 @@ function createTextControls(response, map, attrs){
 		updatePropSymbols(map, attrs[index]);
         updateLegend(map, attrs[index]);
     });
-}
+}*/
 
 //Example 2.1 line 34...Add circle markers for point features to the map
 function createPropSymbols(data, map, attrs, idx){
@@ -183,7 +239,7 @@ function pointToLayer(feature, latlng, attrs, idx){
         color: "#000",
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.7
+        fillOpacity: 0.6
     };
     
     //Give each feature's circle marker a radius based on its attribute value
@@ -202,22 +258,117 @@ function pointToLayer(feature, latlng, attrs, idx){
         },
         mouseout: function(){
             this.closePopup();
+        },
+        click: function(){
+            
+            var featureValues = [
+                [attrs[0],feature.properties[attrs[0]]],
+                [attrs[1],feature.properties[attrs[1]]],
+                [attrs[2],feature.properties[attrs[2]]],
+                [attrs[3],feature.properties[attrs[3]]],
+                [attrs[4],feature.properties[attrs[4]]],
+                [attrs[5],feature.properties[attrs[5]]],
+                [attrs[6],feature.properties[attrs[6]]]
+            ]
+            var arr = featureValues.map(function(value,index) { return value[1]; });
+            var min = Math.min.apply( null, arr );
+            var max = Math.max.apply( null, arr );
+            console.log((Math.floor(min/100)*100).toString())
+            var chartData ={
+                type: 'line',
+                "utc": true,
+                "title": {
+                    "text": feature.properties["Cities"],
+                    "font-size": "13px",
+                    "adjust-layout":true,
+                    wrapText: true,
+                    margin: 5,
+                },
+                plotarea: {
+                    margin: "dynamic 15 30 dynamic",
+                },
+                series: [
+                {
+                  values: featureValues
+                }],
+                "scale-y": {
+                    //"values": "0:1000:250",
+                    "values": (Math.floor(min*0.95/100)*100).toString()+":"+(Math.ceil(max*1.11/100)*100).toString()+":200",
+                    "line-color": "#f6f7f8",
+                    "shadow": 0,
+                    "guide": {
+                        "line-style": "dashed"
+                    },
+                    "label": {
+                        "text": "Population",
+                    },
+                    "minor-ticks": 0,
+                    "thousands-separator": ","
+                },
+                "plot": {
+                    "highlight":true,
+                    "tooltip-text": "Pop: %v<br>%k",
+                    "shadow": 0,
+                    "line-width": "2px",
+                    "marker": {
+                        "type": "circle",
+                        "size": 3
+                    },
+                    "highlight-state": {
+                        "line-width":3
+                    },
+                    "animation":{
+                      "effect":1,
+                      "sequence":2,
+                      "speed":50,
+                    }
+                },
+                
+            };
+            zingchart.render({
+                id: 'chart-div',
+                data: chartData,
+                height: '100%',
+                width: '100%'
+            });
         }
-        /*click: function(){
-            $("#panel").html(popupContent);
-        }*/
     });
 
     //return the circle marker to the L.geoJson pointToLayer option
     return layer;
 };
 
-var inputMin = 0;
-var inputMax = 1000000;
+var inputMin = 500;
+var inputMax = 50000;
+
+$( function() {
+    $( "#slider-range" ).slider({
+        range: true,
+        min: 0,
+        max: 60000,
+        step: 500,
+        values: [ 500, 50000 ],
+        slide: function( event, ui ) {
+            $( "#amount" ).val(numberWithCommas(ui.values[0]) + " - " + numberWithCommas(ui.values[1]));
+            inputMin = ui.values[0];
+            inputMax = ui.values[1];
+            
+            var index = $('.range-slider').val();
+            curLayer = createPropSymbols(curResponse, curMap, curAttrs, index);
+            curMap.addLayer(curLayer);
+        
+            updatePropSymbols(curMap, curAttrs[index]);
+            updateLegend(curMap, curAttrs[index]);
+        }
+    });
+    $( "#amount" ).val(numberWithCommas(inputMin) + " - " + numberWithCommas(inputMax) );
+} );
+
 // for filtering with min and max
 function filterMinMax(feature, layer, idx){
     var year = '201'+idx;
     //console.log(year);
+    
     return (feature.properties[year] >= inputMin && feature.properties[year] <= inputMax);
 }
 
@@ -233,6 +384,7 @@ function createSequenceControls(response, map, attrs){
             var container = L.DomUtil.create('div', 'sequence-control-container');
 
             //create range input element (slider)
+            $(container).append('<label class="sequence-text" for="sequence-control-container"><b>Year: 2010</b></label>');
             $(container).append('<input class="range-slider" type="range">');
             
             //add skip buttons
@@ -279,6 +431,7 @@ function createSequenceControls(response, map, attrs){
 
         //Step 8: update slider
         $('.range-slider').val(index);
+        $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
 		//Called in both skip button and slider event listener handlers
 		//Step 9: pass new attribute to update symbols
         
@@ -293,7 +446,7 @@ function createSequenceControls(response, map, attrs){
     $('.range-slider').on('input', function(){
         //Step 6: get the new index value
         var index = $(this).val();
-        
+        $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
 		//Called in both skip button and slider event listener handlers
 		//Step 9: pass new attribute to update symbols
         curLayer = createPropSymbols(response, map, attrs, index);
@@ -402,7 +555,7 @@ function getCircleValues(map, attribute){
 //Example 3.7 line 1...Update the legend with new attribute
 function updateLegend(map, attribute){
     //create content for legend
-    var content = "<h3>Population of scientific research </br>in " + attribute +"</h3>";
+    var content = "<h3 style='font-size:13px'>Population of scientific research </br>in " + attribute +"</h3>";
 
     //replace legend content
     $('#temporal-legend').html(content);
