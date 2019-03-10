@@ -6,11 +6,11 @@
 /*eslint-disable no-undef*/
 /*eslint-disable no-console*/
 
-/* Map of GeoJSON data from MegaCities.geojson */
+/* Map of GeoJSON data from Pop.geojson */
 
 var curLayer;
 var curMap;
-var curResponsecurResponsecurResponsecurResponsecurResponse;
+var curResponse;
 var curAttrs;
 //function to instantiate the Leaflet map
 function createMap(){
@@ -40,26 +40,27 @@ function getData(map){
     $.ajax("data/pop.geojson", {
         dataType: "json",
         success: function(response){
-            //create an attributes array
+            // create an attributes array
             var attributes = processData(response);
+            
+            // update global variables curAttrs and curResponse
             curAttrs = attributes;
             curResponse = response;
-            //create input control
-            //createTextControls(response,map,attributes);
             
+            // create initial chart on the left panel with average data
             createChart(response,attributes);
             
-            //create proportional symbols
+            // create proportional symbols, with initial index as 0, i.e., 2010
             curLayer = createPropSymbols(response, map, attributes, 0);
             map.addLayer(curLayer);
             
-            //create sequential control over the 7 years
+            // create sequential control over the 7 years
             createSequenceControls(response, map, attributes); //add response here
             
-            //create legend
+            // create legend
             createLegend(map);
             
-            //update legend
+            // update legend
             updateLegend(map, attributes[0]);
             
         }
@@ -67,7 +68,7 @@ function getData(map){
 
 };
 
-//Above Example 3.8...Step 3: build an attributes array from the data
+// build an attributes array from the data
 function processData(data){
     //empty array to hold attributes
     var attrs = [];
@@ -82,12 +83,13 @@ function processData(data){
             attrs.push(attribute);
         };
     };
-
+    // return the pop attrs retrieved from the first feature
     return attrs;
 };
 
+// create initial chart on the left panel with average data
 function createChart(response,attrs){
-
+    // create an matrix with the year as the 1st column, ave pop as 2nd
     var featureValues = [
         [attrs[0],7021],
         [attrs[1],7828],
@@ -97,10 +99,15 @@ function createChart(response,attrs){
         [attrs[5],7721],
         [attrs[6],7518]
     ] 
+    
+    // create an array with the 7 years' pop 
     var arr = featureValues.map(function(value,index) { return value[1]; });
+    
+    // record the min and max of the 7 years' pop
     var min = Math.min.apply( null, arr );
     var max = Math.max.apply( null, arr );
     
+    // build the chartData var with certain settings
     var chartData ={
         type: 'line',
         "utc": true,
@@ -119,7 +126,6 @@ function createChart(response,attrs){
           values: featureValues
         }],
         "scale-y": {
-            //"values": "0:1000:250",
             "values": (Math.floor(min*0.95/100)*100).toString()+":"+(Math.ceil(max*1.05/100)*100).toString()+":200",
             "line-color": "#f6f7f8",
             "shadow": 0,
@@ -160,66 +166,20 @@ function createChart(response,attrs){
     });
 }
 
-//Create Text controls
-/*function createTextControls(response, map, attrs){
-    var InputTextControl = L.Control.extend({
-        options: {
-            position: 'bottomleft'
-        },
-
-        onAdd: function (map) {
-            // create the control container div with a particular class name
-            var container = L.DomUtil.create('div', 'inputtext-control-container');
-
-            //create range input element (text)
-              
-            $(container).append('<label for="range-min" style = "padding-right: 3px">Min:</label>');
-            $(container).append('<input id="range-min" type="text" value = '+inputMin+'>');
-            $(container).append('<label for="range-max" style = "padding-right: 3px">Max:</label>');
-            $(container).append('<input id="range-max" type="text" value = '+inputMax+'>');
-            $(container).append('<button class="filter">Filter</button>');
-            //disable any mouse event listeners for the container
-            L.DomEvent.disableClickPropagation(container);
-
-            return container;
-        }
-    });
-    
-    //map.addControl(new InputTextControl());
-    map.addControl(new InputTextControl());
-    
-    $('.filter').html('<img src="img/filter.png" style = "width:85px">');
-    
-    $('.filter').click(function(){
-        //get the old index value
-        inputMin = Number($('#range-min').val());
-        inputMax = Number($('#range-max').val());
-        //console.log(inputMin);
-        //console.log($("#range-min").val());
-        //Step 8: update slider
-        var index = $('.range-slider').val();
-		//Called in both skip button and slider event listener handlers
-		//Step 9: pass new attribute to update symbols
-        
-        curLayer = createPropSymbols(response, map, attrs, index);
-        map.addLayer(curLayer);
-        
-		updatePropSymbols(map, attrs[index]);
-        updateLegend(map, attrs[index]);
-    });
-}*/
-
-//Example 2.1 line 34...Add circle markers for point features to the map
+// Add circle markers for point features to the map
 function createPropSymbols(data, map, attrs, idx){
+    // remove current layer if exists
     if (curLayer){
         map.removeLayer(curLayer);
     };
 
-    //create a Leaflet GeoJSON layer and add it to the map
+    //create a new/updated Leaflet GeoJSON layer and return it to the map
     var geoJsonLayer = L.geoJson(data, {
+        // for filtering with min and max
         filter: function(feature, layer) {
             return filterMinMax(feature, layer, idx);
         },
+        // create circle markers for the metro points 
         pointToLayer: function(feature, latlng){
             return pointToLayer(feature, latlng, attrs, idx);
         }
@@ -227,8 +187,9 @@ function createPropSymbols(data, map, attrs, idx){
     return geoJsonLayer;
 };
 
+// create circle markers for the metro points 
 function pointToLayer(feature, latlng, attrs, idx){
-    //Step 4: Assign the current attribute based on the first index of the attributes array
+    // Assign the current attribute based on the first index of the attributes array
     var attribute = attrs[idx];
     //check
     //console.log(attribute);
@@ -247,11 +208,11 @@ function pointToLayer(feature, latlng, attrs, idx){
 
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
-    //var layer = L.marker(latlng, options);
     
+    // create pop up for features
     createPopup(feature.properties, attribute, layer, options.radius);
 
-    ///event listeners to open popup on hover and fill panel on click...Example 2.5 line 4
+    ///event listeners to open popup on hover and update the chart in panel on click
     layer.on({
         mouseover: function(){
             this.openPopup();
@@ -259,6 +220,7 @@ function pointToLayer(feature, latlng, attrs, idx){
         mouseout: function(){
             this.closePopup();
         },
+        // update the chart on click
         click: function(){
             
             var featureValues = [
@@ -338,9 +300,11 @@ function pointToLayer(feature, latlng, attrs, idx){
     return layer;
 };
 
+// initial global min and max for slider-range
 var inputMin = 500;
 var inputMax = 50000;
 
+// function to update min and max for filtering
 $( function() {
     $( "#slider-range" ).slider({
         range: true,
@@ -372,7 +336,7 @@ function filterMinMax(feature, layer, idx){
     return (feature.properties[year] >= inputMin && feature.properties[year] <= inputMax);
 }
 
-//Step 1: Create new sequence controls
+// Create new sequence controls
 function createSequenceControls(response, map, attrs){
     var SequenceControl = L.Control.extend({
         options: {
@@ -408,33 +372,32 @@ function createSequenceControls(response, map, attrs){
         step: 1
     });
 	
-	//Below Example 3.5...replace button content with images
+	// replace button content with images
     $('#reverse').html('<img src="img/reverse.png" style = "height:35px">');
     $('#forward').html('<img src="img/forward.png" style = "height:35px">');
 	
-	//Below Example 3.6 in createSequenceControls()
-    //Step 5: click listener for buttons
+    // click listener for buttons
     $('.skip').click(function(){
         //get the old index value
         var index = $('.range-slider').val();
         
-        //Step 6: increment or decrement depending on button clicked
+        // increment or decrement depending on button clicked
         if ($(this).attr('id') == 'forward'){
             index++;
-            //Step 7: if past the last attribute, wrap around to first attribute
+            // if past the last attribute, wrap around to first attribute
             index = index > 6 ? 0 : index;
         } else if ($(this).attr('id') == 'reverse'){
             index--;
-            //Step 7: if past the first attribute, wrap around to last attribute
+            // if past the first attribute, wrap around to last attribute
             index = index < 0 ? 6 : index;
         };
 
-        //Step 8: update slider
+        // update slider
         $('.range-slider').val(index);
         $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
-		//Called in both skip button and slider event listener handlers
-		//Step 9: pass new attribute to update symbols
-        
+		
+        // Called in both skip button and slider event listener handlers
+        // pass new attribute to update symbols
         curLayer = createPropSymbols(response, map, attrs, index);
         map.addLayer(curLayer);
         
@@ -442,13 +405,15 @@ function createSequenceControls(response, map, attrs){
         updateLegend(map, attrs[index]);
     });
 
-    //Step 5: input listener for slider
+    // input listener for slider
     $('.range-slider').on('input', function(){
-        //Step 6: get the new index value
+        // get the new index value
         var index = $(this).val();
+        // update slider text
         $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
-		//Called in both skip button and slider event listener handlers
-		//Step 9: pass new attribute to update symbols
+		
+        // Called in both skip button and slider event listener handlers
+		// pass new attribute to update symbols
         curLayer = createPropSymbols(response, map, attrs, index);
         map.addLayer(curLayer);
         
@@ -472,23 +437,8 @@ function createLegend(map){
             //add temporal legend div to container
             $(container).append('<div id="temporal-legend">')
 
-            //Step 1: start attribute legend svg string
+            // start attribute legend svg string
             var svg = '<svg id="attribute-legend" width="250px" height="180px">';
-
-            //array of circle names to base loop on
-            //object to base loop on...replaces Example 3.10 line 1
-                   //Example 3.6 line 4...array of circle names to base loop on
-            /*var circles = ["max", "mean", "min"];
-
-            //Step 2: loop to add each circle and text to svg string
-            for (var i=0; i<circles.length; i++){
-                //circle string
-                svg += '<circle class="legend-circle" id="' + circles[i] + 
-                '" fill="#add8e6" fill-opacity="0.8" stroke="#000000" cx="90"/>';
-
-                //text string
-                svg += '<text id="' + circles[i] + '-text" x="160" y="'+ (i+1)*43 + '"></text>';
-            };*/
             
             var circles = {
                 max: 30,
@@ -552,7 +502,7 @@ function getCircleValues(map, attribute){
     };
 };
 
-//Example 3.7 line 1...Update the legend with new attribute
+// Update the legend with new attribute
 function updateLegend(map, attribute){
     //create content for legend
     var content = "<h3 style='font-size:13px'>Population of scientific research </br>in " + attribute +"</h3>";
@@ -572,7 +522,7 @@ function updateLegend(map, attribute){
             r: radius
         });
 
-        //Step 4: add legend text
+        // add legend text
         if (circleValues[key]>1000){
             $('#'+key+'-text').text(numberWithCommas(Math.round(circleValues[key]/1000)*1000));
         }else{
@@ -582,11 +532,12 @@ function updateLegend(map, attribute){
     };
 };
 
+// add commas to numbers
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-//Step 10: Resize proportional symbols according to new attribute values
+// Resize proportional symbols according to new attribute values
 function updatePropSymbols(map, attribute){
     map.eachLayer(function(layer){
         //Example 3.16 line 4
@@ -597,12 +548,6 @@ function updatePropSymbols(map, attribute){
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
             
-            /*var icon2 = L.icon({
-                    iconUrl: 'img/research.png',
-                    iconSize: calcPropRadius(props[attribute])
-                })
-
-            layer.setIcon(layer.options.icon = icon2);*/
             // this is for circle marker
             layer.setRadius(radius);
             
@@ -612,7 +557,7 @@ function updatePropSymbols(map, attribute){
 };
 
 // proportional symbols
-//calculate the radius of each proportional symbol
+// calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
     var scaleFactor = 0.3;

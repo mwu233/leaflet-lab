@@ -16,27 +16,37 @@
 	</head>
 
 	<body>
-		<!--put your initial page content here-->
-        <!--<div id="range"></div>-->
+		<!--put the initial page content here-->
+        <!--title section-->
         <div class="navbar-header">
             <h4 class="navbar-text"><a class="navbar-brand" href="../index.html">Population of scientific research and development services in 20 U.S. Metro Areas: 2010-2016</a></h4>
         </div>
+        
+        <!--the left panel section-->
         <div id="panel">
             <p>
-              <label for="amount" style = "padding-right: 3px;">Population range:</label>
-              <input type="text" id="amount" readonly style="border:0; color:lightskyblue; font-weight:bold; width: 140px; font-family: verdana;">
+                <!--update input according to the change of #slider-range-->
+                <label for="amount" style = "padding-right: 3px;">Population range:</label>
+                <input type="text" id="amount" readonly style="border:0; color:lightskyblue; font-weight:bold; width: 140px; font-family: verdana;">
             </p>
+            
+            <!--filter pop with two inputs, i.e., min and max-->
             <div id="slider-range"></div>
             
+            <!--chart section-->
             <div id='chart-div'></div>
             
+            <!--a link back to the initial chart showing the average pop for the 7 years-->
             <a class="back" href="../index.html" style='text-align:center;'>back to average info</a>
             
+            <!--metadata section-->
             <div id='metadata'>
                 <p style='font-size:12px;margin-top: 30px;'><b>Background: </b>This industry group comprises establishments engaged in conducting original investigation undertaken on a systematic basis to gain new knowledge (research) and/or the application of research findings or other scientific knowledge for the creation of new or significantly improved products or processes (experimental development). The industries within this industry group are defined on the basis of the domain of research; that is, on the scientific expertise of the establishment.</p>
                 <p style='font-size:12px'><b>Data Source: </b>American FactFinder, 2012 NAICS code</p>
             </div>
         </div>
+        
+        <!--the map section on the right-->
         <div id="mapid"></div>
 		
 		<!--you can also use this space for internal scripts or stylesheets;
