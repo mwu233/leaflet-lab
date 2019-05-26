@@ -3,3 +3,6 @@ leaflet-lab-mapping population of scientific research services in U.S. metro are
 
 Link to the website with AWS S3 as server:
 https://s3.amazonaws.com/population-research-us-20-metro/index.html
+
+Link to the website with github as server:
+https://mwu233.github.io/leaflet-lab/index.html
